@@ -84,4 +84,11 @@ function EMICalculator() {
   );
 }
 
-ReactDOM.render(<EMICalculator />, document.getElementById('root'));
+ReactDOM.render(
+  <Layout>
+    <div className="w-full max-w-md">
+      <EMICalculator />
+    </div>
+  </Layout>,
+  document.getElementById('root')
+);
