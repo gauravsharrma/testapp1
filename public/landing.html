@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>App Showcase</title>
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Custom neumorphic style */
+    body {
+      background-color: #e0e0e0;
+    }
+    .neu {
+      background: #e0e0e0;
+      border-radius: 1rem;
+      box-shadow: 8px 8px 16px #bebebe,
+                  -8px -8px 16px #ffffff;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col text-gray-800">
+  <!-- Header -->
+  <header class="neu m-4 p-4 text-center">
+    <h1 class="text-2xl font-semibold">App Showcase</h1>
+  </header>
+
+  <!-- Search and Filter Section -->
+  <main class="flex-1 px-4">
+    <!-- Search bar -->
+    <div class="mb-4">
+      <input id="search" type="text" placeholder="Search apps..." class="w-full p-3 rounded-xl neu outline-none" />
+    </div>
+    <!-- Category dropdown -->
+    <div class="mb-4">
+      <select id="categoryFilter" class="w-full p-3 rounded-xl neu outline-none">
+        <option value="">All Categories</option>
+      </select>
+    </div>
+
+    <!-- App cards container -->
+    <div id="appContainer" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="neu m-4 p-4 text-center">
+    <p>&copy; 2023 App Showcase</p>
+  </footer>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // Sample apps data
+    const apps = [
+      { icon: '📊', name: 'Budget Buddy', description: 'Track your expenses effortlessly.', category: 'Finance' },
+      { icon: '💪', name: 'Fitness Tracker', description: 'Stay on top of your workouts.', category: 'Health' },
+      { icon: '📝', name: 'Task Master', description: 'Organize your daily tasks.', category: 'Productivity' },
+      { icon: '☀️', name: 'WeatherNow', description: 'Get real-time weather updates.', category: 'Weather' },
+      { icon: '🍳', name: 'Recipe Guru', description: 'Find recipes for every occasion.', category: 'Food' },
+      { icon: '✈️', name: 'TravelLog', description: 'Plan and record your trips.', category: 'Travel' }
+    ];
+
+    const appContainer = document.getElementById('appContainer');
+    const searchInput = document.getElementById('search');
+    const categoryFilter = document.getElementById('categoryFilter');
+
+    // Populate category dropdown based on available categories
+    function populateCategories() {
+      const categories = [...new Set(apps.map(app => app.category))];
+      categories.forEach(cat => {
+        const option = document.createElement('option');
+        option.value = cat;
+        option.textContent = cat;
+        categoryFilter.appendChild(option);
+      });
+    }
+
+    // Render apps based on current filters
+    function renderApps() {
+      const text = searchInput.value.toLowerCase();
+      const category = categoryFilter.value;
+
+      const filtered = apps.filter(app => {
+        const matchesName = app.name.toLowerCase().includes(text);
+        const matchesCategory = category === '' || app.category === category;
+        return matchesName && matchesCategory;
+      });
+
+      appContainer.innerHTML = '';
+      filtered.forEach(app => {
+        const card = document.createElement('div');
+        card.className = 'neu p-4 flex flex-col space-y-2';
+        card.innerHTML = `
+          <div class="text-4xl">${app.icon}</div>
+          <h2 class="text-lg font-semibold">${app.name}</h2>
+          <p class="text-sm text-gray-600">${app.description}</p>
+          <span class="text-xs font-medium bg-gray-200 rounded-lg px-2 py-1">${app.category}</span>
+        `;
+        appContainer.appendChild(card);
+      });
+    }
+
+    // Event listeners for live filtering
+    searchInput.addEventListener('input', renderApps);
+    categoryFilter.addEventListener('change', renderApps);
+
+    populateCategories();
+    renderApps();
+  </script>
+</body>
+</html>
